@@ -33,11 +33,62 @@ target_sources(arrays
         arrays.cpp
 )
 
+add_library(vector_utils INTERFACE)
+
+target_sources(vector_utils
+    INTERFACE
+        FILE_SET HEADERS
+        FILES
+            vector_utils.hpp
+)
+target_link_libraries(arrays
+    PRIVATE
+        vector_utils
+)
+
+add_executable(pointers)
+
+target_sources(pointers
+    PUBLIC
+        pointers_main.cpp
+)
+
+add_library(pointers_lib)
+
+target_sources(pointers_lib
+    PRIVATE
+        pointers.cpp
+    
+    PUBLIC
+        FILE_SET HEADERS
+        FILES
+            pointers.hpp
+)
+
+target_link_libraries(pointers
+    PRIVATE
+        pointers_lib
+)
+
+#===== TESTS ======#
 add_executable(array_tests)
 
 target_sources(array_tests
     PUBLIC
         array_tests.cpp
+)
+
+add_executable(pointer_tests)
+
+target_sources(pointer_tests
+    PUBLIC
+        pointer_tests.cpp
+)
+
+target_link_libraries(pointer_tests
+    PRIVATE
+        pointers_lib
+        GTest::gtest_main
 )
 
 add_library(test_utils)
@@ -60,3 +111,4 @@ target_link_libraries(array_tests
 
 include(GoogleTest)
 gtest_discover_tests(array_tests)
+gtest_discover_tests(pointer_tests)
