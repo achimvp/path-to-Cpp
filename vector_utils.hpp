@@ -69,3 +69,6 @@ template <typename T>
 float length(const Vector3<T>& v) {
     return static_cast<float>(std::sqrt(static_cast<float>(dot(v, v))));
 }
+
+Vector3<float>* allocateVector3();
+void freeVector3(Vector3<float>**);
