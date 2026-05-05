@@ -33,10 +33,13 @@ target_sources(arrays
         arrays.cpp
 )
 
-add_library(vector_utils INTERFACE)
+add_library(vector_utils)
 
 target_sources(vector_utils
-    INTERFACE
+    PRIVATE
+        vector_utils.cpp
+
+    PUBLIC
         FILE_SET HEADERS
         FILES
             vector_utils.hpp
@@ -68,6 +71,18 @@ target_sources(pointers_lib
 target_link_libraries(pointers
     PRIVATE
         pointers_lib
+)
+
+add_executable(heap_memory)
+
+target_sources(heap_memory
+    PUBLIC
+        heap_memory.cpp
+)
+
+target_link_libraries(heap_memory
+    PUBLIC
+        vector_utils
 )
 
 #===== TESTS ======#
@@ -109,6 +124,23 @@ target_link_libraries(array_tests
         GTest::gtest_main
 )
 
+add_executable(heap_memory_tests)
+
+target_sources(heap_memory_tests
+    PRIVATE
+        heap_memory_tests.cpp
+)
+
+target_link_libraries(heap_memory_tests
+    PRIVATE
+        vector_utils
+        GTest::gtest_main
+)
+
+target_compile_options(heap_memory PRIVATE -fsanitize=address)
+target_link_options(heap_memory PRIVATE -fsanitize=address)
+
 include(GoogleTest)
 gtest_discover_tests(array_tests)
 gtest_discover_tests(pointer_tests)
+gtest_discover_tests(heap_memory_tests)
