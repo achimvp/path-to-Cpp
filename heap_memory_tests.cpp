@@ -25,3 +25,10 @@ TEST(HeapTest, allocateVector3) {
     freeVector3(&v);
     EXPECT_EQ(v, nullptr);
 }
+
+TEST(HeadTest, makeVector3) {
+    auto p1 = makeVector3(1.0f, 3.0f, 6.0f);
+    auto p2 = makeVector3(1, -1, 400);
+    EXPECT_FLOAT_EQ(p1->data[0], 1.0f);
+    EXPECT_EQ(p2->data[0], 1);
+}

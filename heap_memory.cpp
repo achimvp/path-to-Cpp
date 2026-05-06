@@ -1,5 +1,6 @@
 #include <iostream>
 #include "vector_utils.hpp"
+#include <memory>
 
 int main(int argc, char** argv) {
     std::cout << "Hello from " << argv[0] << std::endl;
@@ -29,5 +30,21 @@ int main(int argc, char** argv) {
     Vector3<float>* v = allocateVector3();
     std::cout << "Here is the allocated vector " << *v << std::endl;
     freeVector3(&v);
+
+    // Smart pointer section
+    auto sp = makeVector3(1.0f, 3.0f, 156.0f);
+    std::cout << "Here is the smart vector: " << *sp << std::endl;
+
+    auto p1 = std::make_shared<Vector3<float>>(1.0f, 2.0f, 3.0f);
+    std::cout << "Count of shared pointer: " << p1.use_count() << std::endl;
+    { // New context
+        auto p2 = p1;
+        std::cout << "Count of shared pointer in context with additional pointer: " << p1.use_count() << std::endl;
+    }; // p2 goes out of context
+    std::cout << "Cont of shared pointer out of context: " << p1.use_count() << std::endl;
+
+    // This is not allowed!!!
+    // auto p3 = std::make_unique<int>(42);
+    // auto p4 = p3;
     return 0;
 }

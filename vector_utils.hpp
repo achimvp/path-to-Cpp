@@ -3,6 +3,7 @@
 #include <array>
 #include <type_traits>
 #include <cmath>
+#include <memory>
 
 template <typename T>
 struct Vector3
@@ -72,3 +73,8 @@ float length(const Vector3<T>& v) {
 
 Vector3<float>* allocateVector3();
 void freeVector3(Vector3<float>**);
+template <typename T>
+std::unique_ptr<Vector3<T>> makeVector3(T x, T y, T z) {
+    auto p = std::make_unique<Vector3<T>>(x, y, z);
+    return p;
+}
