@@ -85,6 +85,29 @@ target_link_libraries(heap_memory
         vector_utils
 )
 
+add_executable(sensor_main)
+
+target_sources(sensor_main
+    PUBLIC
+        sensor_main.cpp
+)
+
+add_library(sensor)
+
+target_sources(sensor
+    PRIVATE
+        sensor.cpp
+    PUBLIC
+        FILE_SET HEADERS
+        FILES
+            sensor.hpp
+)
+
+target_link_libraries(sensor_main
+    PUBLIC
+        sensor
+)
+
 #===== TESTS ======#
 add_executable(array_tests)
 
@@ -137,6 +160,19 @@ target_link_libraries(heap_memory_tests
         GTest::gtest_main
 )
 
+add_executable(sensor_tests)
+
+target_sources(sensor_tests
+    PRIVATE
+        sensor_tests.cpp
+)
+
+target_link_libraries(sensor_tests
+    PRIVATE
+        sensor
+        GTest::gtest_main
+)
+
 target_compile_options(heap_memory PRIVATE -fsanitize=address)
 target_link_options(heap_memory PRIVATE -fsanitize=address)
 
@@ -144,3 +180,4 @@ include(GoogleTest)
 gtest_discover_tests(array_tests)
 gtest_discover_tests(pointer_tests)
 gtest_discover_tests(heap_memory_tests)
+gtest_discover_tests(sensor_tests)
