@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 #include "utils.hpp"
 
 void aufgabe1() {
@@ -21,8 +22,6 @@ void aufgabe2() {
     std::cout << typeid(str1).name() << ": " << str1 << std::endl;
     std::cout << typeid(str2).name() << ": " << str2 << std::endl;
 }
-
-
 
 void aufgabe3() {
     std::cout << "Aufgabe 3: Auto Keyword with Range-Based For Loop" << std::endl;
@@ -47,24 +46,24 @@ void aufgabe3() {
     std::cout << std::endl;
 }
 
-void capitalize(std::vector<std::string>& words){
-    for(auto& word:words){
+void capitalize(std::vector<std::string>& words) {
+    for (auto& word : words) {
         word[0] = std::toupper(word[0]);
     }
 }
 
-std::vector<std::string> capitalized(const std::vector<std::string>& words){
-    std::vector<std::string> capitalizedWords {};
-    for(const auto& word:words){
+std::vector<std::string> capitalized(const std::vector<std::string>& words) {
+    std::vector<std::string> capitalizedWords{};
+    for (const auto& word : words) {
         capitalizedWords.push_back(word);
         capitalizedWords.back()[0] = std::toupper(capitalizedWords.back()[0]);
-    }    
+    }
     return capitalizedWords;
 }
 
 template <typename T>
-T maximum(T a, T b){
-    if(a > b){
+T maximum(T a, T b) {
+    if (a > b) {
         return a;
     } else {
         return b;
@@ -79,14 +78,14 @@ int main() {
     // capitalize(words);
     auto capitalizedWords = capitalized(words);
     utils::printVector(capitalizedWords);
-    std::vector<int> numbers = {1,2,3,4,5};
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
     utils::printVector(numbers);
 
     int a = 1, b = 2;
-    std::cout << "Maximum von " << a << " und " << b << " ist: " << maximum(a,b) << std::endl;
+    std::cout << "Maximum von " << a << " und " << b << " ist: " << maximum(a, b) << std::endl;
 
     float c = 1.3, d = 4.6;
-    std::cout << "Maximum von " << c << " und " << d << " ist: " << maximum(c,d) << std::endl;
+    std::cout << "Maximum von " << c << " und " << d << " ist: " << maximum(c, d) << std::endl;
 
     return 0;
 }
