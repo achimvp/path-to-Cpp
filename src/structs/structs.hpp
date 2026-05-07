@@ -2,8 +2,7 @@
 #include <iostream>
 #include <vector>
 
-struct Person
-{
+struct Person {
     std::string name;
     int age;
 
@@ -15,8 +14,7 @@ std::ostream& operator<<(std::ostream& os, const Person& person);
 
 Person oldest(const std::vector<Person>& persons);
 
-struct Team
-{
+struct Team {
     std::string name;
     std::vector<Person> members;
 

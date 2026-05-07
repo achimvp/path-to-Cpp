@@ -1,9 +1,10 @@
-#include "sensor.hpp"
 #include <iostream>
+
+#include "sensor.hpp"
 
 int main() {
     Sensor s("TestSensor");
-    for(int i=0;i<11;i++){
+    for (int i = 0; i < 11; i++) {
         float a = i * 2.0f;
         s.update(a);
     }

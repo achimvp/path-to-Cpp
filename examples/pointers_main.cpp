@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "pointers.hpp"
 
 int main() {
@@ -19,7 +20,7 @@ int main() {
 
     int arr[5] = {3, 5, 10, -42, 66};
     int sum = 0;
-    for(size_t i = 0;i<5;i++){
+    for (size_t i = 0; i < 5; i++) {
         sum += *(arr + i);
     }
     std::cout << "Sum of values in array is: " << sum << std::endl;

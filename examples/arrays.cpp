@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "vector_utils.hpp"
 
 int main() {
@@ -19,5 +20,4 @@ int main() {
     std::cout << a - b << std::endl;
     std::cout << a * 2.0l << std::endl;
     std::cout << 2.0l * a << std::endl;
-
 }
