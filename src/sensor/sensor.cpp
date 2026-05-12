@@ -4,7 +4,7 @@
 
 Sensor::Sensor(const std::string& name, float minVal, float maxVal)
     : name(name), minVal(minVal), maxVal(maxVal), value(0.0f) {}
-Sensor::Sensor() : name(""), minVal(0.0f), maxVal(0.0f), value(0.0f) {};
+Sensor::Sensor() : name(""), minVal(0.0f), maxVal(0.0f), value(0.0f){};
 void Sensor::update(float newValue) {
     if (newValue < minVal || newValue > maxVal) {
         throw std::out_of_range("Sensor value is not in allowed range.");
