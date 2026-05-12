@@ -1,7 +1,8 @@
-#include "pointers.hpp"
 #include <gtest/gtest.h>
 
-TEST(PointersTest, Swap){
+#include "pointers.hpp"
+
+TEST(PointersTest, Swap) {
     int a = 5, b = 10;
     int sum1 = a + b;
     pointers::swap(&a, &b);

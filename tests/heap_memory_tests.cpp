@@ -1,5 +1,6 @@
-#include "vector_utils.hpp"
 #include <gtest/gtest.h>
+
+#include "vector_utils.hpp"
 
 TEST(HeapTest, IntAllocation) {
     int* p = new int(42);
@@ -11,7 +12,7 @@ TEST(HeapTest, IntAllocation) {
 
 TEST(HeapTest, ArrayValues) {
     int* arr = new int[5];
-    for(size_t i=0;i<5;i++) arr[i] = i*i;
+    for (size_t i = 0; i < 5; i++) arr[i] = i * i;
     EXPECT_EQ(arr[0], 0);
     EXPECT_EQ(arr[2], 4);
     EXPECT_EQ(arr[4], 16);
@@ -19,7 +20,7 @@ TEST(HeapTest, ArrayValues) {
 }
 
 TEST(HeapTest, allocateVector3) {
-    Vector3<float> *v = allocateVector3();
+    Vector3<float>* v = allocateVector3();
     ASSERT_NE(v, nullptr);
     EXPECT_FLOAT_EQ(v->data[0], 0.0f);
     freeVector3(&v);
