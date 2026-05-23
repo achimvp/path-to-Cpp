@@ -1,23 +1,24 @@
 #include "sensor.hpp"
 
+#include <cmath>
 #include <iostream>
 
-Sensor::Sensor(const std::string& name, float minVal, float maxVal)
+BaseSensor::BaseSensor(const std::string& name, float minVal, float maxVal)
     : name(name), minVal(minVal), maxVal(maxVal), value(0.0f) {}
-Sensor::Sensor() : name(""), minVal(0.0f), maxVal(0.0f), value(0.0f){};
-void Sensor::update(float newValue) {
+void BaseSensor::update(float newValue) {
     if (newValue < minVal || newValue > maxVal) {
         throw std::out_of_range("Sensor value is not in allowed range.");
     };
     value = newValue;
+    // historyPosition goes up to 2*size to distinguish full and empty buffers
     history.at(historyPosition % history.size()) = newValue;
     historyPosition = (historyPosition + 1) % (2 * history.size());
 }
-float Sensor::getValue() const { return value; }
+float BaseSensor::getValue() const { return value; }
 
-std::string Sensor::getName() const { return name; }
+std::string BaseSensor::getName() const { return name; }
 
-float Sensor::getAverage() const {
+float BaseSensor::getAverage() const {
     // In case we haven't had any measurements yet
     if (historyPosition == 0) return 0.0f;
 
@@ -28,40 +29,59 @@ float Sensor::getAverage() const {
     }
     return sum / measurementCounts;
 }
+TemperatureSensor::TemperatureSensor(const std::string& name, float minVal, float maxVal)
+    : BaseSensor(name, minVal, maxVal){};
+std::string TemperatureSensor::getUnit() const { return "°C"; }
 
-std::ostream& operator<<(std::ostream& os, const Sensor& sensor) {
-    os << "Sensor " << sensor.getName() << ": " << sensor.getValue();
+float TemperatureSensor::getFahrenheit() const { return value * 9.0f / 5.0f + 32; }
+
+PressureSensor::PressureSensor(const std::string& name, float minVal, float maxVal)
+    : BaseSensor(name, minVal, maxVal){};
+std::string PressureSensor::getUnit() const { return "hPa"; }
+
+float PressureSensor::getAltitude() const {
+    float p_0 = 1013.25f;  // hPa = kg * m^{-1} * s^{-2}
+    float h_0 = 0.0f;      // m
+    float g = 9.81f;       // m * s^{-2}
+    float R = 8.314f;      // J * K^{-1} * mol^{-1}
+    float T = 288.0f;      // K
+    float M = 0.02896;     // kg * mol^{-1}
+    float h_s = R * T / (M * g);
+    return (std::log(p_0) - std::log(value)) * h_s + h_0;
+}
+
+HumiditySensor::HumiditySensor(const std::string& name, float minVal, float maxVal)
+    : BaseSensor(name, minVal, maxVal){};
+std::string HumiditySensor::getUnit() const { return "%"; }
+
+bool HumiditySensor::isDewPointRisk() const { return value > 85.0f; }
+
+std::ostream& operator<<(std::ostream& os, const BaseSensor& sensor) {
+    os << "Sensor " << sensor.getName() << ": " << sensor.getValue() << sensor.getUnit();
     return os;
 }
 
-void SensorArray::addSensor(const Sensor& s) {
-    sensors[numSensors] = s;
+void SensorArray::addSensor(std::unique_ptr<BaseSensor> s) {
+    if (numSensors >= sensors.size()) {
+        throw std::out_of_range("SensorArray is full.");
+    }
+    sensors[numSensors] = std::move(s);
     numSensors++;
 }
 
 void SensorArray::printAll() const {
     std::cout << "Sensors:";
     for (size_t i = 0; i < numSensors; i++) {
-        std::cout << sensors[i] << "\n";
+        std::cout << *sensors[i] << "\n";
     }
     std::cout << std::endl;
 }
 
-Sensor SensorArray::getSensor(const std::string& name) const {
-    for (Sensor s : sensors) {
-        if (s.getName() == name) {
-            return s;
+BaseSensor& SensorArray::getSensor(const std::string& name) const {
+    for (size_t i = 0; i < numSensors; i++) {
+        if (sensors[i]->getName() == name) {
+            return *sensors[i];
         }
     }
     throw std::out_of_range("Sensor was not found.");
-}
-
-Sensor SensorArray::getHottestSensor() const {
-    size_t hottestSensorIndex = 0;
-    for (size_t i = 0; i < numSensors; i++) {
-        if (sensors[i].getValue() > sensors[hottestSensorIndex].getValue()) {
-            hottestSensorIndex = i;
-        }
-    }
-    return sensors[hottestSensorIndex];
 }
